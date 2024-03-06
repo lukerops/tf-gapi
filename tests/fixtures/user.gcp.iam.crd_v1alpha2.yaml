@@ -1,0 +1,50 @@
+apiVersion: tf-gapi.lukerops.com/v1alpha2
+kind: CustomResourceDefinition
+metadata:
+  name: user.gcp.iam
+spec:
+  group: gcp.iam
+  kind: User
+  versions:
+    - name: v1alpha2
+      specSchema:
+        type: object
+        properties:
+          name:
+            type: string
+          active:
+            type: bool
+            default: true
+
+    - name: v1alpha3
+      specSchema:
+        type: object
+        properties:
+          name:
+            type: string
+          active:
+            type: bool
+            default: false
+
+---
+apiVersion: gcp.iam/v1alpha2
+kind: User
+metadata:
+  name: user-teste-default-bool-true
+spec:
+  name: Usuário Teste default true
+---
+apiVersion: gcp.iam/v1alpha3
+kind: User
+metadata:
+  name: user-teste-default-bool-false
+spec:
+  name: Usuário Teste default false
+---
+apiVersion: gcp.iam/v1alpha2
+kind: User
+metadata:
+  name: user-teste-define-bool-value
+spec:
+  name: Usuário Teste define bool false
+  active: false

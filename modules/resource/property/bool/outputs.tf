@@ -2,7 +2,7 @@ locals {
   error_messages = {
     null_value    = <<-EOT
       Invalid resource manifest!
-      The property "%s" can not be null.
+      The property "%s" is null and no default value was defined.
       (metadata.name: "%s"; path: "%s")
     EOT
     invalid_value = <<-EOT
@@ -11,13 +11,18 @@ locals {
       (metadata.name: "%s"; path: "%s")
     EOT
   }
+
+  has_default_value    = try(var.schema.default, null) != null
+  default_value        = try(var.schema.default, null)
+  property_final_value = var.value != null ? var.value : local.has_default_value ? local.default_value : null
+
 }
 
 output "value" {
-  value = tobool(var.value)
+  value = tobool(local.property_final_value)
 
   precondition {
-    condition = var.value != null
+    condition = local.property_final_value != null
     error_message = format(
       local.error_messages.null_value,
       var.property,
@@ -27,7 +32,7 @@ output "value" {
   }
 
   precondition {
-    condition = can(tobool(var.value))
+    condition = can(tobool(local.property_final_value))
     error_message = format(
       local.error_messages.invalid_value,
       var.property,

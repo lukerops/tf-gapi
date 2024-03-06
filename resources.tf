@@ -12,5 +12,6 @@ module "resources" {
   manifest = local.resource_manifests[count.index]
   custom_resource_definitions = flatten(concat(
     module.custom_resource_definitions_v1alpha1[*].schemas,
+    module.custom_resource_definitions_v1alpha2[*].schemas,
   ))
 }
